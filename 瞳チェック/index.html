@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>原神マップ：瞳・宝箱・チャレンジ</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body {
+      height: 100%; margin: 0; padding: 0;
+    }
+    #map {
+      height: 100%;
+    }
+    .controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .controls button {
+      margin: 2px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    .map-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .reset-button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="controls">
+    <strong>ピン選択：</strong>
+    <button onclick="setCurrentType('hujin')">瞳</button>
+    <button onclick="setCurrentType('takara')">宝箱</button>
+    <button onclick="setCurrentType('challenge')">チャレンジ</button>
+    <button class="reset-button" onclick="resetMarkers()">チェック全削除</button>
+  </div>
+
+  <div class="map-selector">
+    <strong>マップ切替：</strong><br>
+    <button onclick="switchMap('mond')">モンド</button>
+    <button onclick="switchMap('liyue1')">璃月1</button>
+    <button onclick="switchMap('liyue2')">璃月2</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      crs: L.CRS.Simple,
+      minZoom: -5,
+      maxZoom: 2,
+      zoomSnap: 0.1,
+      zoomDelta: 0.5
+    });
+
+    const maps = {
+      mond: { url: 'images/mond_map.jpg', size: [2000, 1500] },
+      liyue1: { url: 'images/liyue1.jpg', size: [3000, 1722] },
+      liyue2: { url: 'images/liyue2.jpg', size: [3000, 1722] }
+    };
+
+    let currentMap = 'mond';
+    let currentType = 'hujin';
+    let overlay, imageBounds;
+
+    const baseIconSize = 43; // 通常サイズの半分（ズームで変動）
+
+    function createIcon(type, size = baseIconSize) {
+      let url = '';
+      let anchor = [size / 2, size];
+      if (type === 'hujin') {
+        url = (currentMap === 'mond') ? 'images/hujin.jpg' : 'images/iwagami.jpg';
+      } else if (type === 'takara') {
+        url = 'images/takara.png';
+      } else {
+        url = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
+        anchor = [size / 2, size];
+      }
+      return L.icon({ iconUrl: url, iconSize: [size, size], iconAnchor: anchor });
+    }
+
+    const markerLayer = L.layerGroup().addTo(map);
+
+    function switchMap(mapName) {
+      currentMap = mapName;
+      if (overlay) map.removeLayer(overlay);
+      const size = maps[mapName].size;
+      imageBounds = [[0, 0], [size[1], size[0]]];
+      overlay = L.imageOverlay(maps[mapName].url, imageBounds).addTo(map);
+      map.setMaxBounds(imageBounds);
+      map.fitBounds(imageBounds);
+      loadMarkers();
+    }
+
+    function setCurrentType(type) {
+      currentType = type;
+    }
+
+    function saveMarkers() {
+      const markers = [];
+      markerLayer.eachLayer(layer => {
+        markers.push({
+          lat: layer.getLatLng().lat,
+          lng: layer.getLatLng().lng,
+          type: layer.options.customType || 'challenge'
+        });
+      });
+      localStorage.setItem('mapMarkers_' + currentMap, JSON.stringify(markers));
+    }
+
+    function loadMarkers() {
+      markerLayer.clearLayers();
+      const savedMarkers = JSON.parse(localStorage.getItem('mapMarkers_' + currentMap) || '[]');
+      savedMarkers.forEach(({ lat, lng, type }) => {
+        const icon = createIcon(type, baseIconSize * map.getZoomScale(map.getZoom(), 0));
+        const marker = L.marker([lat, lng], { icon: icon }).addTo(markerLayer);
+        marker.options.customType = type;
+      });
+    }
+
+    function resetMarkers() {
+      markerLayer.clearLayers();
+      localStorage.removeItem('mapMarkers_' + currentMap);
+    }
+
+    function updateMarkerIcons() {
+      markerLayer.eachLayer(layer => {
+        const type = layer.options.customType;
+        const icon = createIcon(type, baseIconSize * map.getZoomScale(map.getZoom(), 0));
+        layer.setIcon(icon);
+      });
+    }
+
+    map.on('zoomend', updateMarkerIcons);
+
+    map.on('click', function (e) {
+      const { lat, lng } = e.latlng;
+      let removed = false;
+      markerLayer.eachLayer(layer => {
+        if (map.distance(layer.getLatLng(), e.latlng) < 30) {
+          markerLayer.removeLayer(layer);
+          removed = true;
+        }
+      });
+      if (!removed) {
+        const icon = createIcon(currentType, baseIconSize * map.getZoomScale(map.getZoom(), 0));
+        const marker = L.marker([lat, lng], { icon: icon }).addTo(markerLayer);
+        marker.options.customType = currentType;
+      }
+      saveMarkers();
+    });
+
+    switchMap('mond');
+  </script>
+</body>
+</html>
