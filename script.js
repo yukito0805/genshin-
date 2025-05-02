@@ -14,16 +14,16 @@ const areas = {
   mondstadt: { url: 'images/mondstadt.png', width: 3878, height: 2765, subAreas: {} },
   liyue: { 
     url: 'images/liyue.png', 
-    width: 4169, 
-    height: 4571, 
+    width: 4571, 
+    height: 4169, 
     subAreas: { 
-      sougan: { url: 'images/natlan_P0.png', width: 1677, height: 1893 } 
+      sougan: { url: 'images/natlan_P0.png', width: 1893, height: 1677 } 
     } 
   },
   inazuma: { 
     url: 'images/inazuma1_P0.png', 
-    width: 5568, 
-    height: 6018, 
+    width: 6018, 
+    height: 5568, 
     subAreas: { 
       enkonomiya: { url: 'images/inazuma_P0.png', width: 3018, height: 3171 } 
     } 
@@ -31,18 +31,18 @@ const areas = {
   sumeru: { url: 'images/sumeru_P0_highres.png', width: 5578, height: 5543, subAreas: {} },
   fontaine: { 
     url: 'images/fontaine_map.png', 
-    width: 4356, 
-    height: 3175, 
+    width: 3175, 
+    height: 4356, 
     subAreas: { 
-      ancientSea: { url: 'images/map34_P0.png', width: 1014, height: 1998 } 
+      ancientSea: { url: 'images/map34_P0.png', width: 1998, height: 1014 } 
     } 
   },
   natlan: { 
     url: 'images/natlan_N1.png', 
-    width: 5896, 
-    height: 5432, 
+    width: 5432, 
+    height: 5896, 
     subAreas: { 
-      ancientMountain: { url: 'images/map36_P0.png', width: 3117, height: 2634 } 
+      ancientMountain: { url: 'images/map36_P0.png', width: 2634, height: 3117 } 
     } 
   }
 };
