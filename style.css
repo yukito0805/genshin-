@@ -1,0 +1,144 @@
+/* 全体のスタイル */
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* マップ */
+#map {
+  height: 60vh;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* カウントカード */
+.card {
+  max-width: 100%;
+}
+
+/* カウントコンテナ */
+.count-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 200px; /* スクロール対応 */
+  overflow-y: auto; /* 縦スクロール */
+}
+
+/* カウント項目 */
+.count-item {
+  width: 150px;
+  padding: 5px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+/* 印コンテナ */
+.seal-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 印項目 */
+.seal-item {
+  width: 150px;
+  padding: 5px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+/* 現在選択中のエリアの強調 */
+.seal-item.active {
+  background-color: #e0e7ff; /* 薄い青 */
+  font-weight: bold;
+}
+
+/* モーダル */
+.modal-body img, .modal-body iframe {
+  max-width: 100%;
+}
+
+/* アイコン選択 */
+.icon-option {
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+.icon-option.selected {
+  border-color: #007bff;
+}
+
+/* チェックボックス */
+.form-check {
+  margin-right: 15px;
+}
+.form-check-label {
+  font-size: 0.9rem;
+}
+
+/* ピンのバッジ */
+.pin-badge {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+  text-align: center;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+  border-radius: 2px;
+  margin-right: 2px;
+}
+.badge-underground {
+  background-color: #ff0000; /* 赤 */
+}
+.badge-seelie {
+  background-color: #00b7eb; /* 水色 */
+}
+.badge-electroSeelie {
+  background-color: #b19cd9; /* 薄紫 */
+}
+.badge-challenge {
+  background-color: #28a745; /* 緑 */
+}
+
+/* ズームコントロール */
+.leaflet-control-zoom {
+  margin: 10px;
+}
+
+/* エリア選択 */
+#areaSelect, #subAreaSelect {
+  max-width: 300px;
+}
+
+/* ピンのアイコン */
+.leaflet-marker-icon {
+  cursor: pointer;
+  background: none !important; /* 背景を透明に */
+}
+
+/* モバイル対応（iPad含む） */
+@media (max-width: 768px) {
+  #map {
+    height: 50vh;
+  }
+  #areaSelect, #subAreaSelect {
+    max-width: 100%;
+  }
+  .count-item, .seal-item {
+    width: calc(33.33% - 10px);
+  }
+  .form-check {
+    margin-right: 10px;
+  }
+  .form-check-label {
+    font-size: 0.85rem;
+  }
+  .leaflet-control-zoom {
+    transform: scale(1.2);
+  }
+}
