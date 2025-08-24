@@ -1,0 +1,226 @@
+ --- フォント・色・背景 --- 
+body {
+  font-family 'Noto Sans JP', 'Montserrat', Arial, sans-serif;
+  background linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+  color #384353;
+  min-height 100vh;
+}
+
+.navbar {
+  background rgba(56,67,83, 0.90) !important;
+  box-shadow 0 4px 16px rgba(56,67,83,0.11);
+  border-radius 0 0 18px 18px;
+  font-family 'Montserrat', 'Noto Sans JP', sans-serif;
+}
+
+.navbar-brand {
+  font-weight bold;
+  font-size 1.7rem;
+  letter-spacing 1px;
+  color #fff !important;
+}
+
+ --- カード --- 
+.card {
+  background rgba(255,255,255,0.93);
+  border-radius 18px;
+  box-shadow 0 6px 32px rgba(80,110,200,0.10);
+  border none;
+  margin-bottom 1.2rem;
+  transition box-shadow .25s;
+}
+.cardhover {
+  box-shadow 0 16px 48px rgba(80,110,200,0.15);
+}
+
+.card-body  h5 {
+  font-family 'Montserrat', 'Noto Sans JP', sans-serif;
+  font-weight bold;
+  margin-bottom .7rem;
+  color #4f63b6;
+}
+
+ --- マップ --- 
+#map {
+  height 65vh;
+  width 100%;
+  border-radius 18px;
+  box-shadow 0 8px 32px rgba(100, 120, 200, 0.10);
+  border none;
+  margin-bottom 2rem;
+  background #e6eaff;
+}
+
+ --- カウント・印 --- 
+.count-container, .seal-container {
+  display flex;
+  flex-wrap wrap;
+  gap 14px;
+  max-height 220px;
+  overflow-y auto;
+  justify-content flex-start;
+}
+
+.count-item, .seal-item {
+  width 143px;
+  padding 7px 0;
+  text-align center;
+  background rgba(200,210,255,0.22);
+  border-radius 14px;
+  font-size 1rem;
+  font-weight 500;
+  color #384353;
+  box-shadow 0 1px 7px rgba(60,90,170,0.07);
+  transition background .2s;
+}
+
+.seal-item.active {
+  background linear-gradient(90deg, #a5b4fc 0%, #f0f5ff 100%);
+  font-weight bold;
+  color #2c357e;
+}
+
+@media (max-width 768px) {
+  #map { height 45vh; }
+  .count-item, .seal-item { width calc(50% - 14px); font-size .95rem;}
+}
+
+ --- 表示非表示コントロール --- 
+#iconVisibilityControls {
+  max-height 220px;
+  overflow-y auto;
+  display grid;
+  grid-template-columns repeat(auto-fill, minmax(140px, 1fr));
+  gap 7px;
+}
+#iconVisibilityControls .form-check {
+  margin 0;
+  padding 2px 0;
+}
+
+#iconVisibilityControls .form-check-label {
+  font-size 0.9rem;
+  color #4f63b6;
+}
+
+ --- ピンバッジ --- 
+.pin-badge {
+  display inline-block;
+  width 13px;
+  height 13px;
+  line-height 13px;
+  text-align center;
+  color white;
+  font-size 9px;
+  font-weight bold;
+  border-radius 3px;
+  margin-right 2px;
+  box-shadow 0 1px 3px rgba(80,80,120,0.10);
+}
+.badge-downway { background #5ca9e6; }
+.badge-underground { background #f36363; }
+.badge-seelie { background #7fd0d9; }
+.badge-electroSeelie { background #b19cd9; }
+.badge-challenge { background #5ed17a; }
+.badge-gimmick { background #f7b267; }
+
+ --- モーダル --- 
+.modal-content {
+  background rgba(255,255,255,0.98);
+  border-radius 16px;
+  box-shadow 0 7px 32px rgba(100, 120, 200, 0.13);
+}
+
+.modal-title {
+  font-family 'Montserrat', 'Noto Sans JP', sans-serif;
+  font-weight bold;
+  color #4f63b6;
+}
+
+.icon-option {
+  border 2px solid transparent;
+  border-radius 11px;
+  transition border-color 0.22s, box-shadow 0.22s;
+  box-shadow 0 2px 7px rgba(120,140,180,0.09);
+}
+.icon-option.selected {
+  border-color #4f63b6;
+  box-shadow 0 2px 12px rgba(80,110,200,0.17);
+}
+.icon-optionhover {
+  border-color #a5b4fc;
+}
+
+ --- フォームチェックボックス --- 
+.form-check-inputchecked {
+  background-color #4f63b6;
+  border-color #4f63b6;
+}
+
+.form-check-label {
+  font-size 0.97rem;
+  color #384353;
+}
+
+ --- ボタン --- 
+.btn-primary, #exportPins, #importTrigger {
+  background linear-gradient(90deg, #4f63b6 0%, #a5b4fc 100%);
+  border none;
+  color #fff;
+  font-weight 600;
+  border-radius 9px;
+  box-shadow 0 2px 7px rgba(80,100,200,0.10);
+  transition background .16s, box-shadow .19s, transform .12s;
+}
+.btn-primaryhover, #exportPinshover, #importTriggerhover {
+  background linear-gradient(90deg, #6375cb 0%, #b8c2fa 100%);
+  transform translateY(-2px) scale(1.03);
+  box-shadow 0 4px 18px rgba(80,110,200,0.18);
+}
+
+ --- その他UI --- 
+.popup-image {
+  cursor pointer;
+  max-width 220px;
+  border-radius 9px;
+  box-shadow 0 2px 9px rgba(120,120,180,0.13);
+  margin 7px 0;
+  transition box-shadow .18s;
+}
+.popup-imagehover {
+  box-shadow 0 8px 32px rgba(90,110,200,0.23);
+}
+
+.leaflet-marker-icon {
+  cursor pointer;
+  background none !important;
+  border-radius 50%;
+  box-shadow 0 1px 6px rgba(60,90,170,0.11);
+}
+
+.leaflet-marker-icon.grayscale {
+  filter grayscale(100%);
+  opacity 0.67;
+}
+
+.leaflet-overlay-pane .connection-line {
+  stroke #a5b4fc;
+  stroke-width 2.5px;
+  opacity .9;
+}
+
+.leaflet-control-zoom {
+  margin 12px;
+  backdrop-filter blur(1px);
+  border-radius 10px;
+}
+
+-webkit-scrollbar {
+  width 7px;
+  background #edf2fa;
+  border-radius 6px;
+}
+-webkit-scrollbar-thumb {
+  background #c7d2fe;
+  border-radius 6px;
+}
