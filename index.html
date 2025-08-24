@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>原神 探索マップ</title>
+  <!-- Google Fonts & Bootstrap Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <!-- Leaflet.js -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <!-- Bootstrap -->
@@ -13,137 +16,73 @@
 </head>
 <body>
   <!-- ナビゲーションバー -->
-  <nav class="navbar navbar-dark bg-dark">
+  <nav class="navbar navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">原神 探索マップ</a>
+      <a class="navbar-brand" href="#"><i class="bi bi-map"></i> 原神 探索マップ</a>
     </div>
   </nav>
 
   <!-- メインコンテンツ -->
-  <div class="container my-3">
-    <!-- エリア選択 -->
-    <div class="mb-3">
-      <label for="areaSelect" class="form-label">エリア選択</label>
-      <select id="areaSelect" class="form-select">
-        <option value="mondstadt">モンド</option>
-        <option value="liyue">璃月</option>
-        <option value="inazuma">稲妻</option>
-        <option value="sumeru">スメール</option>
-        <option value="fontaine">フォンテーヌ</option>
-        <option value="natlan">ナタ</option>
-      </select>
-      <select id="subAreaSelect" class="form-select mt-2" style="display: none;">
-        <option value="">サブエリアを選択</option>
-      </select>
+  <div class="container my-4">
+    <!-- エリア選択とエクスポート/インポート -->
+    <div class="mb-4">
+      <div class="d-flex flex-wrap gap-3 align-items-start">
+        <div class="flex-grow-1" style="max-width: 340px;">
+          <label for="areaSelect" class="form-label fw-bold text-primary">エリア選択</label>
+          <select id="areaSelect" class="form-select mb-2"></select>
+          <select id="subAreaSelect" class="form-select" style="display: none;"></select>
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <button id="exportPins" class="btn btn-primary"><i class="bi bi-download"></i> ピンをエクスポート</button>
+          <div class="d-flex gap-2">
+            <input type="file" id="importPins" class="form-control" accept=".json" style="max-width: 200px;">
+            <button id="importTrigger" class="btn btn-primary"><i class="bi bi-upload"></i> インポート</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- マップ -->
     <div id="map"></div>
 
-    <!-- カウント表示 -->
-    <div class="card mb-3">
+    <!-- ピンの表示/非表示コントロール -->
+    <div class="card my-4">
       <div class="card-body">
-        <h5>ピンの総数</h5>
+        <h5><i class="bi bi-eye"></i> ピンの表示/非表示</h5>
+        <div id="iconVisibilityControls" class="d-flex flex-wrap gap-2"></div>
+      </div>
+    </div>
+
+    <!-- カウント表示 -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5><i class="bi bi-cup-straw"></i> ピンの総数</h5>
         <div class="count-container">
-          <div class="count-item">
-            風神瞳: <span id="countHujin">0</span>
-          </div>
-          <div class="count-item">
-            岩神瞳: <span id="countIwagami">0</span>
-          </div>
-          <div class="count-item">
-            雷神瞳: <span id="countRaijin">0</span>
-          </div>
-          <div class="count-item">
-            草神瞳: <span id="countSoushin">0</span>
-          </div>
-          <div class="count-item">
-            水神瞳: <span id="countSuijin">0</span>
-          </div>
-          <div class="count-item">
-            炎神瞳: <span id="countEnshin">0</span>
-          </div>
-          <div class="count-item">
-            チャレンジ: <span id="countChallenge">0</span>
-          </div>
-          <div class="count-item">
-            仙霊: <span id="countSenrei">0</span>
-          </div>
-          <div class="count-item">
-            元素石碑: <span id="countSekihi">0</span>
-          </div>
-          <div class="count-item">
-            立方体: <span id="countSquare">0</span>
-          </div>
-          <div class="count-item">
-            鍵紋1: <span id="countKey1">0</span>
-          </div>
-          <div class="count-item">
-            鍵紋2: <span id="countKey2">0</span>
-          </div>
-          <div class="count-item">
-            鍵紋3: <span id="countKey3">0</span>
-          </div>
-          <div class="count-item">
-            鍵紋4: <span id="countKey4">0</span>
-          </div>
-          <div class="count-item">
-            鍵紋5: <span id="countKey5">0</span>
-          </div>
-          <div class="count-item">
-            雷霊: <span id="countElectroSeelie">0</span>
-          </div>
-          <div class="count-item">
-            アランナラ: <span id="countArannara">0</span>
-          </div>
-          <div class="count-item">
-            Sギミック: <span id="countSGimmick">0</span>
-          </div>
-          <div class="count-item">
-            リーフコア: <span id="countLeaf">0</span>
-          </div>
-          <div class="count-item">
-            短火装置: <span id="countDai">0</span>
-          </div>
-          <div class="count-item">
-            死域: <span id="countShiki">0</span>
-          </div>
-          <div class="count-item">
-            普通の宝箱: <span id="countHutu">0</span>
-          </div>
-          <div class="count-item">
-            精巧な宝箱: <span id="countSeikou">0</span>
-          </div>
-          <div class="count-item">
-            貴重な宝箱: <span id="countKityo">0</span>
-          </div>
-          <div class="count-item">
-            豪華な宝箱: <span id="countGouka">0</span>
-          </div>
-          <div class="count-item">
-            珍奇な宝箱: <span id="countTinki">0</span>
-          </div>
+          <div class="count-item">風神瞳: <span id="countHujin">0</span></div>
+          <div class="count-item">岩神瞳: <span id="countIwagami">0</span></div>
+          <div class="count-item">雷神瞳: <span id="countRaijin">0</span></div>
+          <div class="count-item">草神瞳: <span id="countSoushin">0</span></div>
+          <div class="count-item">水神瞳: <span id="countSuijin">0</span></div>
+          <div class="count-item">炎神瞳: <span id="countEnshin">0</span></div>
+          <div class="count-item">チャレンジ: <span id="countChallenge">0</span></div>
+          <div class="count-item">仙霊: <span id="countSenrei">0</span></div>
+          <div class="count-item">幻写霊: <span id="countGensharei">0</span></div>
+          <div class="count-item">アランナラ: <span id="countArannara">0</span></div>
+          <div class="count-item">死域: <span id="countShiki">0</span></div>
+          <div class="count-item">普通の宝箱: <span id="countHutu">0</span></div>
+          <div class="count-item">精巧な宝箱: <span id="countSeikou">0</span></div>
+          <div class="count-item">貴重な宝箱: <span id="countKityo">0</span></div>
+          <div class="count-item">豪華な宝箱: <span id="countGouka">0</span></div>
+          <div class="count-item">珍奇な宝箱: <span id="countTinki">0</span></div>
         </div>
-        <h5 class="mt-3">印の総数</h5>
+        <h5 class="mt-3"><i class="bi bi-gem"></i> 印の総数</h5>
         <div class="seal-container">
-          <div class="seal-item">
-            モンド: <span id="sealMondstadt">0</span>
-          </div>
-          <div class="seal-item">
-            璃月: <span id="sealLiyue">0</span>
-          </div>
-          <div class="seal-item">
-            稲妻: <span id="sealInazuma">0</span>
-          </div>
-          <div class="seal-item">
-            スメール: <span id="sealSumeru">0</span>
-          </div>
-          <div class="seal-item">
-            フォンテーヌ: <span id="sealFontaine">0</span>
-          </div>
-          <div class="seal-item">
-            ナタ: <span id="sealNatlan">0</span>
-          </div>
+          <div class="seal-item">モンド: <span id="sealMondstadt">0</span></div>
+          <div class="seal-item">璃月: <span id="sealLiyue">0</span></div>
+          <div class="seal-item">稲妻: <span id="sealInazuma">0</span></div>
+          <div class="seal-item">スメール: <span id="sealSumeru">0</span></div>
+          <div class="seal-item">フォンテーヌ: <span id="sealFontaine">0</span></div>
+          <div class="seal-item">ナタ: <span id="sealNatlan">0</span></div>
         </div>
       </div>
     </div>
@@ -154,7 +93,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">ピンの追加</h5>
+          <h5 class="modal-title"><i class="bi bi-pin-angle"></i> ピンの追加</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -162,38 +101,31 @@
             <div class="mb-3">
               <label class="form-label">アイコン</label>
               <div id="iconSelector" class="d-flex flex-wrap">
-                <img src="images/hujin.jpg" data-icon="風神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/iwagami.jpg" data-icon="岩神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/inazumahitomi.png" data-icon="雷神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/sousin.png" data-icon="草神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/suijin.png" data-icon="水神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/enjin.png" data-icon="炎神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/challenge.png" data-icon="チャレンジ" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/senrei.png" data-icon="仙霊" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/sekihi.png" data-icon="元素石碑" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/square.png" data-icon="立方体" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/key1.png" data-icon="鍵紋1" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/key2.png" data-icon="鍵紋2" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/key3.png" data-icon="鍵紋3" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/key4.png" data-icon="鍵紋4" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/key5.png" data-icon="鍵紋5" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/rairei.png" data-icon="雷霊" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/arannara.png" data-icon="アランナラ" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/SGimmick.png" data-icon="スメールギミック" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/leaf.png" data-icon="リーフコア" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/dai.png" data-icon="短火装置" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/shiki.png" data-icon="死域" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/hutu.png" data-icon="普通の宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/seikou.png" data-icon="精巧な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/kityou.png" data-icon="貴重な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/gouka.png" data-icon="豪華な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
-                <img src="images/tinki.png" data-icon="珍奇な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" />
+                <img src="images/hujin.jpg" data-icon="風神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="風神瞳アイコン" />
+                <img src="images/iwagami.jpg" data-icon="岩神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="岩神瞳アイコン" />
+                <img src="images/inazumahitomi.png" data-icon="雷神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="雷神瞳アイコン" />
+                <img src="images/sousin.png" data-icon="草神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="草神瞳アイコン" />
+                <img src="images/suijin.png" data-icon="水神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="水神瞳アイコン" />
+                <img src="images/enjin.png" data-icon="炎神瞳" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="炎神瞳アイコン" />
+                <img src="images/challenge.png" data-icon="チャレンジ" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="チャレンジアイコン" />
+                <img src="images/senrei.png" data-icon="仙霊" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="仙霊アイコン" />
+                <img src="images/leaf.png" data-icon="幻写霊" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="幻写霊アイコン" />
+                <img src="images/shiki.png" data-icon="死域" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="死域アイコン" />
+                <img src="images/hutu.png" data-icon="普通の宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="普通の宝箱アイコン" />
+                <img src="images/seikou.png" data-icon="精巧な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="精巧な宝箱アイコン" />
+                <img src="images/kityou.png" data-icon="貴重な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="貴重な宝箱アイコン" />
+                <img src="images/gouka.png" data-icon="豪華な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="豪華な宝箱アイコン" />
+                <img src="images/tinki.png" data-icon="珍奇な宝箱" class="icon-option m-1" style="width: 48px; height: 48px; cursor: pointer;" onerror="this.src='images/fallback.png'" alt="珍奇な宝箱アイコン" />
               </div>
               <input type="hidden" id="pinIcon" />
             </div>
             <div class="mb-3">
               <label class="form-label">属性</label>
               <div class="d-flex flex-wrap gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="downway">
+                  <label class="form-check-label" for="downway">下道</label>
+                </div>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="underground">
                   <label class="form-check-label" for="underground">地下</label>
@@ -203,12 +135,16 @@
                   <label class="form-check-label" for="seelie">仙霊</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="electroSeelie">
-                  <label class="form-check-label" for="electroSeelie">雷霊</label>
-                </div>
-                <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="challenge">
                   <label class="form-check-label" for="challenge">チャレンジ</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="gimmick">
+                  <label class="form-check-label" for="gimmick">ギミック</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="obtained">
+                  <label class="form-check-label" for="obtained">取得済み</label>
                 </div>
               </div>
             </div>
@@ -217,9 +153,19 @@
               <textarea class="form-control" id="pinNote" rows="3"></textarea>
             </div>
             <div class="mb-3">
-              <label for="pinImage" class="form-label">画像URL</label>
-              <input type="url" class="form-control" id="pinImage">
-              <img id="imagePreview" class="mt-2" style="max-width: 100%; display: none;">
+              <label for="pinImage1" class="form-label">画像URL 1</label>
+              <input type="url" class="form-control" id="pinImage1">
+              <img id="imagePreview1" class="mt-2" style="max-width: 100%; display: none;">
+            </div>
+            <div class="mb-3">
+              <label for="pinImage2" class="form-label">画像URL 2</label>
+              <input type="url" class="form-control" id="pinImage2">
+              <img id="imagePreview2" class="mt-2" style="max-width: 100%; display: none;">
+            </div>
+            <div class="mb-3">
+              <label for="pinImage3" class="form-label">画像URL 3</label>
+              <input type="url" class="form-control" id="pinImage3">
+              <img id="imagePreview3" class="mt-2" style="max-width: 100%; display: none;">
             </div>
             <div class="mb-3">
               <label for="pinVideo" class="form-label">YouTube URL</label>
@@ -230,7 +176,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-          <button type="button" class="btn btn-primary" onclick="savePin()">決定</button>
+          <button type="button" class="btn btn-primary" onclick="savePin()"><i class="bi bi-check2-circle"></i> 決定</button>
         </div>
       </div>
     </div>
